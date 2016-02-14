@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Scenes/ballGamePURTY.unity
+  isLoaded: 1
+  isActive: 1

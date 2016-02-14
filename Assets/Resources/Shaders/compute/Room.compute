@@ -1,0 +1,113 @@
+﻿#pragma kernel CSMain
+ 
+
+
+ 
+float _Time;
+float _Delta;
+float3 _HandL;
+float3 _HandR;
+
+int _NumOfCollision;
+
+
+int _TriggerL;
+int _TriggerR;
+
+float radius = .4;
+
+#define threadX 6
+#define threadY 6
+#define threadZ 6
+
+#define strideX 6
+#define strideY 6
+#define strideZ 6
+
+#define gridX (threadX * strideX)
+#define gridY (threadY * strideY)
+#define gridZ (threadZ * strideZ)
+
+
+
+
+#include "Chunks/VertStruct.cginc"
+#include "Chunks/PosStruct.cginc"
+#include "Chunks/springForce.cginc"
+
+#include "Chunks/handForce.cginc"
+
+struct Collision {
+  float3 pos;
+  float3 dir;
+  float speed;
+  float active;
+};
+
+RWStructuredBuffer<Vert> vertBuffer;
+RWStructuredBuffer<Pos> ogBuffer;
+RWStructuredBuffer<float4x4> transBuffer;
+RWStructuredBuffer<Collision> collisionBuffer;
+
+
+float3 collisionForce( Vert v , Collision c ){
+
+  float3 dif = c.pos - v.pos;
+  float l = length( dif );
+  return c.active * c.active * c.active * c.speed * (v.nor / (1 + 2000 * l * l * l));
+  //return dif;
+}
+
+[numthreads(threadX,threadY,threadZ)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+  
+  int total = gridX * gridY * gridZ;
+  
+  int pID = id.x + id.y * gridX + id.z * gridX * gridY;
+  
+  Vert vert = vertBuffer[pID];
+  Pos og = ogBuffer[pID];
+  
+  float3 force = float3( 0. , 0., 0.);
+
+  float3 newPos = mul( transBuffer[0] , float4( og.pos , 1.) ).xyz;
+
+
+
+  //vert.pos =  mul( transBuffer[0] , float4( og.pos , 1.) ).xyz;
+
+   force += 1.3 * springForce( vert.pos , newPos , .00000001 );
+// vert.vel *= .98;
+
+//  force += (_TriggerR -.4)* .01 * handForce( vert.pos , _HandR , 1.0 );
+//  force += (_TriggerL -.4)* .01 * handForce( vert.pos , _HandL , 1.0 );
+//
+  vert.debug = float3( 0. , 0. , 0. ); 
+  for( int i = 0 ; i< 5; i++ ){
+    Collision c = collisionBuffer[ i ];
+    force += 1.3  * collisionForce( vert  , c );
+
+    float lum =1. / ( 1. + length(c.pos - vert.pos ) * 100.);
+
+    float3 col = float3( 1. , 0 , 0 );
+    if( i == 1 ){ col = float3( 0 , 1 , 0);}
+    if( i == 2 ){ col = float3( 0 , 0 , 1);}
+    if( i == 3 ){ col = float3( 1 , 0 , 1);}
+    if( i == 4 ){ col = float3( 0 , 1 , 1);}
+    vert.debug += col * 20.0 * c.active / ( 1. + length(c.pos - vert.pos ) * 100.);
+  }
+
+ vert.vel += force * .1;
+ vert.vel *= .9;
+
+ vert.pos += vert.vel;
+
+  //vert.pos = newPos;
+  //vert.debug = float3( 1 , 0 , 0 );
+  //vert.debug = collisionForce( vert.pos , collisionBuffer[0]);
+
+
+
+  vertBuffer[pID] = vert;
+
+}
