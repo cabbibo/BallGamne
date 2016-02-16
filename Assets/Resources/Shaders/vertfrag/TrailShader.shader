@@ -39,6 +39,8 @@
       uniform sampler2D _NoiseTexture;
       uniform float3 _Hand1;
       uniform float3 _Hand2;
+      uniform float3 _Momma;
+      uniform float _MommaSize;
       uniform float3 _Size;
 
       

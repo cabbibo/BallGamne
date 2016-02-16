@@ -235,17 +235,18 @@
             //Pixel function returns a solid color for each point.
             float4 frag (varyings i) : COLOR {
 
+                float disp = 4 * length( i.debug );
 
-                float3 fNorm = uvNormalMap( _NormalMap , i.pos ,  i.uv  * float2( 1. , .2), i.nor , 10.1 ,.5);
+                float3 fNorm = uvNormalMap( _NormalMap , i.pos ,  i.uv  * float2( 1. , .2), i.nor , 10.1 , .5 / (5 * disp) );
 
 
                 float3 fRefl = reflect( -i.eye , fNorm );
                 float3 cubeCol = texCUBE(_CubeMap,fRefl ).rgb;
 
-                float3 fCol = cubeCol + (i.nor * .5 + .5);
+                float3 fCol = cubeCol + (i.nor * .5 + .5) * disp;
                 //fCol *= cubeCol;
          				 
-                float disp = 4 * length( i.debug );
+               // float disp = 4 * length( i.debug );
          				fCol *= disp;// float3( disp , disp , disp ); 
                 return float4( fCol , 1.);
             }

@@ -13,7 +13,7 @@ Shader "Custom/LineShader" {
   SubShader {
     //Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
 
-    Tags { "RenderType"="Opaque" "Queue" = "Geometry" }
+    Tags { "RenderType"="Transparent" "Queue" = "Geometry" }
     LOD 200
 
     Pass {
@@ -93,25 +93,28 @@ Shader "Custom/LineShader" {
       fixed4 frag(VertexOut i) : COLOR {
 
 
-        float3 col = float3( 0.0 , 0.0 , 0.0 );
+        float3 col = float3( 1.0 , 1.0 , 1.0 );
 
-        float v = sin( i.uv.x * 100. );
+        float v = sin( (1. - i.uv.x) * ( 80. + 5. * trigger) );
+        float cuttoff = .8;
         if(trigger > 0 ){ 
-          v = -v;
-          col = float3( .3 , .5 , .7 );
+         // v = -v;
+          //col = float3( .3 , .5 , .7 );
         }else{ 
-          col = float3( .7 , .5 , .3 );
+          //col = float3( .7 , .5 , .3 );
+          
         }
-        
-        if( v < -.4 ){
+        if( v > trigger * 1. - .95){
           discard;
         }
+   
     	
+        float dist = length( startPoint - endPoint );
 
         //col = float3( sin( i.uv.x * 100. ) , 0. , trigger * .7 + min( 1. , trigger * 1000. ) * .3 );
         //col = float3( trigger , trigger , trigger );
         fixed4 color;
-        color = fixed4( col , 1. );
+        color = fixed4( col  / (dist * dist) , 1.0 );
         return color;
       }
 

@@ -8,8 +8,11 @@ public class BallGame : MonoBehaviour {
   public GameObject BabyPrefab;
   public GameObject MommaPrefab;
   public GameObject   Momma;
+  public GameObject StartButton;
+  public GameObject StartButtonPrefab;
 
   public GameObject Hand;
+  public GameObject Shield;
   public GameObject Controller;
   public GameObject ScoreText;
   public GameObject Platform;
@@ -25,6 +28,7 @@ public class BallGame : MonoBehaviour {
   private Vector3 v1;
   private Vector3 v2;
   private Vector3 roomSize;
+  private Vector4 MommaInfo;
 
   public AudioClip[] AudioList;
   public List<AudioSource> AudioSources = new List<AudioSource>();
@@ -45,26 +49,14 @@ public class BallGame : MonoBehaviour {
     Vector3 v = PlayArea.vertices[0];
     Platform = GameObject.CreatePrimitive(PrimitiveType.Cube);
     Platform.transform.localScale = new Vector3( Mathf.Abs( v.x )  * 1.5f ,1.0f ,  Mathf.Abs( v.z ) * 1.5f);
-    Platform.transform.position = new Vector3( 0f , -0.4f , 0f );
-    Platform.GetComponent<MeshRenderer>().material = PlatformMat;
+    Platform.transform.position = new Vector3( 0f , -0.49f , 0f );
+
+    Platform.GetComponent<MeshRenderer>().material = PlatformMat ;
+    //m = PlatformMat;
+    Platform.GetComponent<MeshRenderer>().material.SetVector("_Size" , Platform.transform.localScale );
 
 
-//Loading the items into the array
-  /*AudioList =  new AudioClip[]{ (AudioClip)Resources.Load("Audio/friends/bass"),
-                                 (AudioClip)Resources.Load("Audio/friends/plipPlop1"),
-                                 (AudioClip)Resources.Load("Audio/friends/plipPlop2"),
-                                 (AudioClip)Resources.Load("Audio/friends/shuffle"),
-                                 (AudioClip)Resources.Load("Audio/friends/tenor"),
-                                 (AudioClip)Resources.Load("Audio/friends/heartbeat"),
-                                 (AudioClip)Resources.Load("Audio/friends/atmosphere"),
-                                 (AudioClip)Resources.Load("Audio/friends/melody1"),
-                                 (AudioClip)Resources.Load("Audio/friends/melody2"),
-                                 (AudioClip)Resources.Load("Audio/friends/melody3"),
-                                 (AudioClip)Resources.Load("Audio/friends/melody4"),
-                                 (AudioClip)Resources.Load("Audio/friends/melody5"),
-                                 (AudioClip)Resources.Load("Audio/friends/burial") };*/
-
-  AudioList =  new AudioClip[]{ (AudioClip)Resources.Load("Audio/hydra/TipHit1"),
+    AudioList =  new AudioClip[]{ (AudioClip)Resources.Load("Audio/hydra/TipHit1"),
                                 (AudioClip)Resources.Load("Audio/hydra/TipHit2"),
                                 (AudioClip)Resources.Load("Audio/hydra/TipHit3"),
                                 (AudioClip)Resources.Load("Audio/hydra/TipHit4"), };
@@ -85,6 +77,10 @@ public class BallGame : MonoBehaviour {
     Momma = (GameObject) Instantiate( MommaPrefab, new Vector3() , new Quaternion());
     Momma.GetComponent<Momma>().BallGameObj = transform.gameObject;
     Momma.transform.position = new Vector3( 0 , 3 , 0 );
+
+    StartButton = (GameObject) Instantiate( StartButtonPrefab, new Vector3() , new Quaternion());
+    StartButton.GetComponent<StartButton>().BallGameObj = transform.gameObject;
+    StartButton.transform.position = new Vector3( 0 , 1 , 0 );
 
     //HandL.GetComponent<HandScript>().BallGameObj = transform.gameObject;
     //HandR.GetComponent<HandScript>().BallGameObj = transform.gameObject;
@@ -110,9 +106,9 @@ public class BallGame : MonoBehaviour {
         v1 = baby.transform.position - Hand.transform.position;
         float l = v1.magnitude;
 
-        float w = (1.0f / (1.0f + l)) * (1.0f / (1.0f + l));
+        float w = (1.0f / (1.0f + l)) * (1.0f / (1.0f + l))  * (1.0f / (1.0f + l));
 
-        float lineWidth = w * .15f;
+        float lineWidth = w * .05f;
 
          LineRenderer r = baby.GetComponent<LineRenderer>();
          Material m = r.material;
@@ -124,9 +120,11 @@ public class BallGame : MonoBehaviour {
           m.SetVector( "startPoint" , Hand.transform.position );
           m.SetVector( "endPoint" , baby.transform.position );
           m.SetFloat( "trigger" , Controller.GetComponent<controllerInfo>().triggerVal );
+         
 
         m = baby.GetComponent<TrailRenderer>().material;
         m.SetVector("_Size" , roomSize );
+        m.SetVector("_MommaInfo" , MommaInfo );
 
       }
     //}
@@ -150,7 +148,8 @@ public class BallGame : MonoBehaviour {
     go.GetComponent<SpringJoint>().connectedBody = Hand.GetComponent<Rigidbody>();
     AudioSource audioSource = go.GetComponent<AudioSource>();
     go.GetComponent<Rigidbody>().drag = .7f - (score / 100);
-    go.GetComponent<Rigidbody>().mass = .2f - (score / 140);
+    go.GetComponent<Rigidbody>().mass = .2f - (score / 340);
+    go.GetComponent<Rigidbody>().angularDrag = 200;
     go.transform.localScale = go.transform.localScale * (2.0f - (score/30));
 
     //audioSource.clip = AudioList[(int)score];
@@ -162,29 +161,41 @@ public class BallGame : MonoBehaviour {
 //    go.GetComponent<SpringJoint>().enabled = false; connectedBody = HandR.GetComponent<Rigidbody>();
     Babies.Add( go );
 
-    float size = 4.5f + score / 3;
-    Room.transform.localScale = new Vector3( size , size/2 , size );
-    Room.transform.position = new Vector3( 0 , size/4, 0 );
+    float size = 3.0f + score / 3;
+    Room.transform.localScale = new Vector3( size , size/2 + .3f , size );
+    Room.transform.position = new Vector3( 0 , size/4 + .15f , 0 );
+
 
     roomSize = Room.transform.localScale;
 
     Momma.transform.position = new Vector3( Random.Range(  -size/2 , size/2 ), 
-                                            Random.Range(   0 , size/2 ),
+                                            Random.Range(   0 + .15f , size/2 + .15f ),
                                             Random.Range(  -size/2 , size/2 ));
+
+    Momma.transform.localScale = new Vector3( size / 10 , size / 10 , size / 10 );
+    MommaInfo = new Vector4(
+      Momma.transform.position.x,
+      Momma.transform.position.y,
+      Momma.transform.position.z,
+      Momma.transform.localScale.x
+    );
 
     score ++;
     ScoreText.GetComponent<TextMesh>().text = score.ToString();
     Momma.GetComponent<AudioSource>().Play();
+
+
+
   }
 
   public void HandHit( GameObject handHit ){
     //print("fUh!");
 
-    if( score > 1 ){
+    //if( score > 1 ){
 
      restart( handHit );
 
-    }
+    //}
 
 
   }
@@ -201,8 +212,28 @@ public class BallGame : MonoBehaviour {
       Babies.Clear();
       score = 0;
 
-      MommaHit( handHit );
+      
       restartSound.Play();
+
+      StartButton.GetComponent<MeshRenderer>().enabled = true;
+      StartButton.GetComponent<BoxCollider>().enabled = true;
+  }
+
+  public void startGame( GameObject go ){
+
+    
+    StartButton.GetComponent<MeshRenderer>().enabled = false;
+    StartButton.GetComponent<BoxCollider>().enabled = false;
+
+    float size = 3.0f + score / 3;
+
+    StartButton.transform.position = new Vector3( Random.Range(  -size/4 , size/4 ), 
+                                            Random.Range(   size/4 + .15f , size/4 + .15f ),
+                                            Random.Range(  -size/4 , size/4 ));
+
+
+    MommaHit( StartButton );
+
   }
 
   void OnTriggerDown( GameObject go ){

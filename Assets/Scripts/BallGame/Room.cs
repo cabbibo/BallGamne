@@ -468,7 +468,8 @@ public class Room : MonoBehaviour {
     if( activeCollision == numCollisions ){ activeCollision = 0;}
 
     //setCollisionValues();
-    roomAudio.hit(colInfo.speed * .1f + .1f);
+    float pitch = colInfo.speed * .1f + .1f;
+    roomAudio.hit( pitch );
   }
  
 
