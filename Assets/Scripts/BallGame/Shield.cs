@@ -9,10 +9,13 @@ public class Shield : MonoBehaviour {
   public Vector3 startScale;
   public Vector3 startPos;
 
+  private Material mat;
+
 	// Use this for initialization
 	void Start () {
 	 startScale = shieldObj.transform.localScale;
    startPos = shieldObj.transform.localPosition;
+   mat = shieldObj.GetComponent<MeshRenderer>().material;
 	}
 	
 	// Update is called once per frame
@@ -31,6 +34,9 @@ public class Shield : MonoBehaviour {
 //
       shieldObj.transform.localScale =  ci.triggerVal * startScale;
       shieldObj.transform.localPosition = ci.triggerVal * startPos;
+
+      //print(shieldObj.transform.localScale );
+      mat.SetVector( "_Size" , shieldObj.transform.localScale );
     //}
     //shieldObj.GetComponent<Rigidbody>().velocity = v;
 	}

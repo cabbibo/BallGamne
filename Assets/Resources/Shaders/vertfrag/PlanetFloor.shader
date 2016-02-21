@@ -2,11 +2,12 @@ Shader "Custom/PlanetFloor" {
  Properties {
   
 
-    _NumberSteps( "Number Steps", Int ) = 30
+    _NumberSteps( "Number Steps", Int ) = 20
     _MaxTraceDistance( "Max Trace Distance" , Float ) = 10.0
-    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.00001
-    _NoiseTexture( "NoiseTexture" , 2D ) = "defaulttexture" {}
+    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.0001
 
+    _NoiseTexture( "NoiseTexture" , 2D ) = "white" {}
+  
 
   }
   
@@ -24,7 +25,7 @@ Shader "Custom/PlanetFloor" {
       #pragma vertex vert
       #pragma fragment frag
       // Use shader model 3.0 target, to get nicer looking lighting
-      #pragma target 3.0
+      //#pragma target 5.0
 
       #include "UnityCG.cginc"
       #include "Chunks/noise.cginc"
@@ -102,21 +103,27 @@ Shader "Custom/PlanetFloor" {
         float2 lineF;
         float2 sphere;
 
-        res = float2( 10000000. , -1. );
-        //res = float2( -sdBox( pos - float3( 0. , _Size.y / 2. , 0 ) , _Size * .5 ) , 0.6 );
-        float3 modVal = float3( .3 , .3 , .3 );
-        int3 test;
-        //float2 res2 = float2( sdBox( modit(pos , modVal) - modVal / 2. , float3(.1 , 1. , .1 ) ) , 0.6 );
-        //float2 res2 = float2( sdBox( modit(pos , modVal) - modVal / 2. , float3(1. , .1 , .1 ) ) , 0.6 );
-        //float2 res2 = float2( sdBox( modit(pos , modVal) - modVal / 2. , float3(.1 , .1 , 1. ) ) , 0.6 );
-        float3 startPos = modit(pos , modVal) - modVal / 2.;
-        float2 res2 = float2( sdBox( pos - float3( 0 , -1 , 0) , float3( 2000 ,.1 , 2000 )), 0.6 );
-        res = smoothU( res , res2 , 0.02 );
-        //res = smoothU( res , res2 , 0.02 );
+        //res = float2( 10000000. , -1. );
+        res = float2( -sdBox( pos + float3( 0. , 0  , 0 ) , float3( .5 , 2, .5)  ) , 0.6 );
 
         float n = noise( pos * 10. + float3(0 ,_Time.x* 20.0, 0 ) );
          //    = float2( n - .8 , 1.);
-        res.x += n * .3f;
+        res.x += n * .3f * pos.y;
+        float2 res2 = float2( sdBox( pos - float3( 0 , 0.35 , 0) , float3( .3 , .1 , .3 )), 0.6 );
+        //res2.x += n * .1f;
+        res = smoothU( res , res2 , 0.2 );
+
+        //float2 res2 = float2( sdBox( modit(pos , modVal) - modVal / 2. , float3(.1 , 1. , .1 ) ) , 0.6 );
+        //float2 res2 = float2( sdBox( modit(pos , modVal) - modVal / 2. , float3(1. , .1 , .1 ) ) , 0.6 );
+        //float2 res2 = float2( sdBox( modit(pos , modVal) - modVal / 2. , float3(.1 , .1 , 1. ) ) , 0.6 );
+        //float3 startPos = modit(pos , modVal) - modVal / 2.;
+        //float2 res2 = float2( sdBox( pos - float3( 0 , -1 , 0) , float3( 2000 ,.1 , 2000 )), 0.6 );
+        //res = smoothU( res , res2 , 0.02 );
+        ////res = smoothU( res , res2 , 0.02 );
+//
+        //float n = noise( pos * 10. + float3(0 ,_Time.x* 20.0, 0 ) );
+         //    = float2( n - .8 , 1.);
+        //res.x += n * .3f;
         //res = float2( length( pos - float3( 0., -.8 ,0) ) - 1., 0.1 );
         //res = smoothU( res , float2( length( pos - float3( .3 , .2 , -.2) ) - .1, 0.1 ) , .05 );
         //res = smoothU( res , float2( length( pos - float3( -.4 , .2 , .4) ) - .1, 0.1 ) , .05 );
@@ -194,7 +201,8 @@ Shader "Custom/PlanetFloor" {
 
      // Fragment Shader
       fixed4 frag(VertexOut i) : COLOR {
-
+        if( i.normal.y < .9 ){discard;return fixed4( 1. , 1. , 1. , 1. );
+        }else{
         float3 ro = i.ro;
         float3 rd = normalize(ro - i.camPos);
 
@@ -212,7 +220,7 @@ Shader "Custom/PlanetFloor" {
           float3 pos = ro + rd * res.x;
           float3 norm = calcNormal( pos );
           col = norm * .5 + .5;
-          col *= 1. / (1. + 20. * pow( (res.x / _MaxTraceDistance) , 2. ));
+          //col *= 1. / (1. + 20. * pow( (res.x / _MaxTraceDistance) , 2. ));
           //col = float3( 1. , 0. , 0. );
           
         }
@@ -222,8 +230,9 @@ Shader "Custom/PlanetFloor" {
         //col = float3( 1. , 1. , 1. );
 
         fixed4 color;
-        color = fixed4( col / (1. + res.x * res.x * .03), 1. );
+        color = fixed4( col , 1. );
         return color;
+      }
       }
 
       ENDCG

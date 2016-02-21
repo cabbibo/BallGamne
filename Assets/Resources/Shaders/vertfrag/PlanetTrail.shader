@@ -2,10 +2,9 @@
  Properties {
   
 
-    _NumberSteps( "Number Steps", Int ) = 30
+    _NumberSteps( "Number Steps", Int ) = 20
     _MaxTraceDistance( "Max Trace Distance" , Float ) = 10.0
-    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.00001
-    _NoiseTexture( "NoiseTexture" , 2D ) = "defaulttexture" {}
+    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.0001
 
 
   }
@@ -95,7 +94,8 @@
       {
           float a = d1.x;
           float b = d2.x;
-          float h = clamp(0.5+0.5*(b-a)/k, 0.0, 1.0);
+          if( k == 0 ){ k = .0000001; }
+          float h = clamp( 0.5 + 0.5 * (b-a) / k , 0.0, 1.0);
           return float2( lerp(b, a, h) - k*h*(1.0-h), lerp(d2.y, d1.y, pow(h, 2.0)));
       }
 

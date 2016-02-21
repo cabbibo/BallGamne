@@ -12,6 +12,7 @@ public class Momma : MonoBehaviour {
 
     ballGame = BallGameObj.GetComponent<BallGame>();
     Score = transform.Find("Score").gameObject;//.GetComponent<TextMesh>();
+    Score.GetComponent<MeshRenderer>().enabled = false;
 
 	
 	}
@@ -19,7 +20,7 @@ public class Momma : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-    //transform.LookAt( Camera.main.gameObject.transform );
+    transform.LookAt( Camera.main.gameObject.transform );
 	
 	}
 

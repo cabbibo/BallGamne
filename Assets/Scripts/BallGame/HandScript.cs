@@ -26,6 +26,8 @@ public class HandScript : MonoBehaviour {
   void OnCollisionEnter( Collision c ){
     if( c.gameObject.tag == "Baby" ){
       ballGame.HandHit( c.gameObject );
+    }else if( c.gameObject.tag == "Momma" ){
+      ballGame.moveMomma();
     }
   }
 }

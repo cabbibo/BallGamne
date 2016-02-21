@@ -1,0 +1,154 @@
+fileFormatVersion: 2
+guid: 5fee57977ccd14fbd981052b0f262e6c
+timeCreated: 1431607998
+licenseType: Store
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: icons SDF_0
+    21300002: icons SDF_1
+    21300004: icons SDF_2
+    21300006: icons SDF_3
+    21300008: icons SDF_4
+    21300010: icons SDF_5
+    21300012: icons SDF_6
+    21300014: icons SDF_7
+    21300016: icons SDF_8
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 5
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: icons SDF_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 341
+        width: 162
+        height: 162
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: icons SDF_1
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 350
+        width: 161
+        height: 154
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: icons SDF_2
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 348
+        width: 161
+        height: 155
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: icons SDF_3
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 174
+        width: 162
+        height: 162
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: icons SDF_4
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 183
+        width: 161
+        height: 143
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: icons SDF_5
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 179
+        width: 162
+        height: 155
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: icons SDF_6
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 11
+        width: 162
+        height: 162
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 42, y: 42, z: 42, w: 42}
+    - name: icons SDF_7
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 12
+        width: 162
+        height: 161
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 60, y: 60, z: 60, w: 60}
+    - name: icons SDF_8
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 15
+        width: 161
+        height: 156
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

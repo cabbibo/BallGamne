@@ -2,11 +2,10 @@ Shader "Custom/PlanetMomma" {
  Properties {
   
 
-    _NumberSteps( "Number Steps", Int ) = 30
+    _NumberSteps( "Number Steps", Int ) = 20
     _MaxTraceDistance( "Max Trace Distance" , Float ) = 10.0
-    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.00001
-    _NoiseTexture( "NoiseTexture" , 2D ) = "defaulttexture" {}
-
+    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.0001
+    _NumberTexture( "NumberTexture" , 2D ) = "white" {}
 
   }
   
@@ -36,10 +35,17 @@ Shader "Custom/PlanetMomma" {
       uniform int _NumberSteps;
       uniform float  _IntersectionPrecision;
       uniform float _MaxTraceDistance;
-      uniform sampler2D _NoiseTexture;
+      uniform sampler2D _NumberTexture;
       uniform float3 _Hand1;
       uniform float3 _Hand2;
       uniform float3 _Size;
+
+      uniform int _Digit1;
+      uniform int _Digit2;
+      uniform int _Digit3;
+
+ 
+
 
       
 
@@ -87,6 +93,7 @@ Shader "Custom/PlanetMomma" {
       {
           float a = d1.x;
           float b = d2.x;
+          if( k == 0 ){ k = 0.0000001; }
           float h = clamp(0.5+0.5*(b-a)/k, 0.0, 1.0);
           return float2( lerp(b, a, h) - k*h*(1.0-h), lerp(d2.y, d1.y, pow(h, 2.0)));
       }
@@ -96,6 +103,40 @@ Shader "Custom/PlanetMomma" {
           float3 r = x%m;
           return r<0 ? r+m : r;
       }
+
+
+      float getAlpha( uint digit , float2 uv ,  float2 start ){
+
+        uint dig = digit-1;
+        if( digit == 0 ){ dig = 9;}
+
+        float digX = (float((dig % 4)) / 4);
+        float digY = floor( float(dig) / 4 ) / 4;
+
+        
+        float fU = (uv.x - start.x ) * 8;
+        float fV = (uv.y - start.y ) * 5;
+        fU /= 4;
+        fV /= 4;
+        fV = 1- fV;
+        //fU = 1- fU;
+        fU = clamp( fU , 0 , 1 );
+        fV  = clamp( fV , 0 , 1 );
+
+        fU += digX;
+        fV -= digY;
+
+        fU = clamp( fU , 0 , digX + .25 );
+        fV  = clamp( fV , .75 - digY , 1 );
+
+        //float fU = (u - .4) * 4.;
+        float2 lookup = float2( fU ,fV );
+        float alpha = tex2D( _NumberTexture , lookup ).a;
+
+        return alpha;
+
+      }
+
       float2 map( in float3 pos ){
         
         float2 res;
@@ -107,14 +148,56 @@ Shader "Custom/PlanetMomma" {
         float3 modVal = float3( .3 , .3 , .3 );
         int3 test;
       
-        float2 res2 = float2( sdSphere( pos , .5 ), 0.6 );
+        float2 res2 = float2( sdSphere( pos , .4 ), 0.6 );
         //res = opU( res , res2  );
         res = smoothU( res , res2 , 0.0000000 );
 
         float n = noise( pos * (10. +sin( _Time.x * 20.) ) + float3( _SinTime.x , _SinTime.y , _SinTime.z ) );
          //    = float2( n - .8 , 1.);
-        res.x += n * .1f;
-        //res = float2( length( pos - float3( 0., -.8 ,0) ) - 1., 0.1 );
+        //res.x += n * .1;
+
+        
+      
+        pos = normalize( pos );
+        float u = -atan2(pos.x, pos.z) / (2. * 3.14159) + .5;
+        float v =  -acos( pos.y  ) / 3.14159 + 1.0;
+
+
+        u = u;
+        v = 1-v;
+
+        float2 uv = float2( u , v );
+
+
+
+        float digitFinal = 0;
+
+        if( _Digit1 >= 0 ){
+
+
+          float alpha = getAlpha( _Digit1 , uv , float2( .47 , .4 ));
+
+          digitFinal += smoothstep( .1 , .6 , alpha);
+
+        } 
+
+        if( _Digit2 >= 0 ){
+        
+          float alpha = getAlpha( _Digit2 , uv , float2( .41 ,.4 ));
+
+          digitFinal += smoothstep( .1 , .6 , alpha);
+          
+        } 
+
+        res.x -= digitFinal * .03;
+        res.x -= n * (.04 + digitFinal * .04);
+
+        if( digitFinal > 0 ){ 
+          res.y = 1. + digitFinal;
+        }
+
+
+                  //res = float2( length( pos - float3( 0., -.8 ,0) ) - 1., 0.1 );
         //res = smoothU( res , float2( length( pos - float3( .3 , .2 , -.2) ) - .1, 0.1 ) , .05 );
         //res = smoothU( res , float2( length( pos - float3( -.4 , .2 , .4) ) - .1, 0.1 ) , .05 );
         //res = smoothU( res , float2( length( pos - float3( 0.3 , .2 , -.3) ) - .1, 0.1 ) , .05 );
@@ -144,7 +227,7 @@ Shader "Custom/PlanetMomma" {
         float res = -1.0;
         float id = -1.0;
         
-        for( int i=0; i< _NumberSteps; i++ ){
+        [unroll(20)] for( int i=0; i< 20; i++ ){
             
             if( h < _IntersectionPrecision || t > _MaxTraceDistance ) break;
     
@@ -200,9 +283,7 @@ Shader "Custom/PlanetMomma" {
         
         col= float3( 0. , 0. , 0. );
 
-        float alpha = tex2D( _NoiseTexture , i.uv ).x;
-        //if( alpha < pow( abs( i.uv.y - .5 ) , 4.)* 10.0 ){ discard; }
-        //if( alpha < pow( abs( i.uv.x - .5 ) , 4.)* 10.0 ){ discard; }
+
 
         if( res.y > -0.5 ){
 
@@ -213,7 +294,19 @@ Shader "Custom/PlanetMomma" {
           nor = mul(  nor, (float3x3)_World2Object ); 
           nor = normalize( nor );
           col = nor * .5 + .5;
-          col *= 1. / (1. + 20. * pow( (res.x / _MaxTraceDistance) , 2. ));
+
+          if( res.y >= 1. ){
+            col *= res.y - 1;
+          }
+
+
+          //float r = length( pos );
+          //float t = atan2( pos.y , pos.z );
+          //float p = acos( pos.x / r );
+//
+          //col.r = sin( p * 20. );
+          //col.g = sin( t * 20. );
+          //col.b = 0;
           //col = float3( 1. , 0. , 0. );
           
         }else{

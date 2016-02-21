@@ -97,6 +97,8 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
     vert.debug += col * 20.0 * c.active / ( 1. + length(c.pos - vert.pos ) * 100.);
   }
 
+  if( length( force) > 5 ){ force = normalize( force ) * 5; }
+
  vert.vel += force * .1;
  vert.vel *= .9;
 

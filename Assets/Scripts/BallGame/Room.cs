@@ -27,6 +27,8 @@ public class Room : MonoBehaviour {
     public Shader particleShader;
     public ComputeShader computeShader;
 
+        private int collisionsThisFrame;
+
 
 
     private ComputeBuffer _vertBuffer;
@@ -40,6 +42,8 @@ public class Room : MonoBehaviour {
 
     public Texture2D normalMap;
     public Cubemap cubeMap;
+
+    public bool active;
 
     private RoomAudio roomAudio;
 
@@ -65,6 +69,7 @@ public class Room : MonoBehaviour {
         float active;
       };*/
     private const int COLLISION_SIZE = 8;
+
 
 
     private int gridX { get { return threadX * strideX; } }
@@ -181,7 +186,8 @@ public class Room : MonoBehaviour {
 
 
   private void Render(){
-     
+
+    if( this.active == true ){     
       Dispatch();
 
      
@@ -209,7 +215,9 @@ public class Room : MonoBehaviour {
       particleMat.SetBuffer("buf_Points", _vertBuffer);
       particleMat.SetBuffer("og_Points", _ogBuffer);
 
-      Graphics.DrawProcedural(MeshTopology.Triangles, maxVertCount * 3 );
+      //Graphics.DrawProcedural(MeshTopology.Triangles, maxVertCount * 3 );
+
+    }
 
 
   }
@@ -444,12 +452,17 @@ public class Room : MonoBehaviour {
 
     computeShader.Dispatch(_kernel, strideX , strideY , strideZ );
 
+    collisionsThisFrame = 0;
+
   }
 
 
 
 
   public void BabyHit( Collision c ){
+
+    collisionsThisFrame ++;
+    if(collisionsThisFrame > 2 ){ return;}
 
     print(activeCollision);
     CollisionInfo colInfo = collisions[activeCollision];

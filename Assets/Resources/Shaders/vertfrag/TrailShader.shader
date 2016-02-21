@@ -2,10 +2,9 @@
  Properties {
   
 
-    _NumberSteps( "Number Steps", Int ) = 30
+    _NumberSteps( "Number Steps", Int ) = 20
     _MaxTraceDistance( "Max Trace Distance" , Float ) = 10.0
-    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.00001
-    _NoiseTexture( "NoiseTexture" , 2D ) = "defaulttexture" {}
+    _IntersectionPrecision( "Intersection Precision" , Float ) = 0.0001
 
 
   }

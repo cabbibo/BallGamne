@@ -247,10 +247,10 @@
                 //fCol *= cubeCol;
          				 
                // float disp = 4 * length( i.debug );
-         				fCol *= disp;// float3( disp , disp , disp ); 
+         				fCol *= (disp +.1);// float3( disp , disp , disp ); 
 
-                if(abs(sin(i.uv.x* 100.)) < .01){ fCol *=5. *  float3(1.,1. ,1.);}
-                if(abs(sin(i.uv.y* 100.)) < .01){ fCol *=5. *  float3(1.,1. ,1.);}
+                if(abs(sin(i.uv.x* 100.)) < .1){ fCol *= 5. *  float3(1.,1. ,1.);}
+                if(abs(sin(i.uv.y* 100.)) < .1){ fCol *= 5. *  float3(1.,1. ,1.);}
                 return float4( fCol , 1.);
             }
  

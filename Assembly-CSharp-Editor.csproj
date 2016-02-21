@@ -55,31 +55,51 @@
      <None Include="Assets\Resources\Shaders\vertfrag\BasicShader.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\semLookup.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetFloor.shader" />
+     <None Include="Assets\Resources\Shaders\vertfrag\Chunks\sdfSubtract.cginc" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Fade.shader" />
+     <None Include="Assets\Plugins\Catlike Coding\Catlike Coding Readme.txt" />
      <None Include="Assets\Resources\Shaders\vertfrag\RoomParticles.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_BlitFlip.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\LineShader.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetTrail.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\noise.cginc" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Metallic.shader" />
      <None Include="Assets\Resources\Shaders\compute\Room.compute" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Shadow.cginc" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF.cginc" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Specular.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\TrailShader.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_HiddenArea.shader" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Standard.cginc" />
+     <None Include="Assets\Resources\Shaders\vertfrag\Title.shader" />
      <None Include="Assets\Resources\Shaders\compute\Chunks\springForce.cginc" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Forward.cginc" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Overlay.shader" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Meta.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetRoom.shader" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF UI Metallic.shader" />
+     <None Include="Assets\Resources\Shaders\vertfrag\Instructions.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetMomma.shader" />
+     <None Include="Assets\Resources\Shaders\vertfrag\PlanetBaby.shader" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Unlit.shader" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Documentation\SDF Toolkit Readme.txt" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Unlit.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\uvNormalMap.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\getTubeNormalIDs.cginc" />
      <None Include="Assets\Resources\Shaders\compute\Chunks\PosStruct.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\RaytraceFood.shader" />
      <None Include="Assets\SteamVR\Resources\SteamVR_Blit.shader" />
+     <None Include="Assets\Resources\Shaders\vertfrag\PlanetShield.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\getNudibranchFlatPoints.cginc" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF UI Unlit.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\getRibbonID.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\noise 1.cginc" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF UI Specular.shader" />
      <None Include="Assets\Resources\Shaders\compute\Chunks\VertStruct.cginc" />
      <None Include="Assets\SteamVR\readme.txt" />
      <None Include="Assets\Resources\Shaders\compute\Chunks\handForce.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\VertStruct.cginc" />
+     <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Deferred.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\RoomShader.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\getGridDiscard.cginc" />
  <Reference Include="Assembly-UnityScript">
@@ -121,6 +141,8 @@
       <Project>{3D4CEB3C-8290-28A4-BEB3-B22B99F63D42}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{75E41DF9-DC16-507D-F2C8-10619855B885}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
+      <Project>{3CE2D83E-3022-EA4E-EE17-3C7725BD5AD7}</Project>      <Name>Assembly-CSharp-Editor-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
