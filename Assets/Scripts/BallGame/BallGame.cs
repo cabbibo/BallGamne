@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -243,12 +243,14 @@ public class BallGame : MonoBehaviour {
 
     float size = getSizeFromScore();
 
+    
+    
     Momma.transform.position = new Vector3( Random.Range(  -size/2 , size/2 ), 
                                             Random.Range(   0 + .15f , size/2 + .15f ),
                                             Random.Range(  -size/2 , size/2 ));
 
     Momma.transform.localScale = new Vector3( size / 10 , size / 10 , size / 10 );
-    
+
     MommaInfo = new Vector4(
       Momma.transform.position.x,
       Momma.transform.position.y,
