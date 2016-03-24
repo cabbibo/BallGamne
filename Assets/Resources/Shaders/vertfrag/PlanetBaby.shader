@@ -41,6 +41,7 @@ Shader "Custom/PlanetBaby" {
       uniform float3 _Size;
       uniform float3 _Velocity;
       uniform float _Score;
+      uniform float _Learning;
 
       
 
@@ -248,11 +249,14 @@ Shader "Custom/PlanetBaby" {
 
         //col = normalize( _Velocity ) * .5 + .5;
         //if(abs(.5 - i.uv.y) > .4){ col = float3( 1. , 1., 1.);}
-     
-        
+        //float m = max( max( col.x , col.y ) , col.z);
+        float m = length( col );
+        col = lerp( col , float3( m  , m , m) , _Learning );
 
         fixed4 color;
         color = fixed4( col / (1. + res.x * res.x * .03), 1. );
+
+
         return color;
       }
 

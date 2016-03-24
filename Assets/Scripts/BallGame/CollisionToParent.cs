@@ -12,7 +12,7 @@ public class CollisionToParent : MonoBehaviour {
   void OnCollisionEnter( Collision c ){
 
     if( c.gameObject.tag == "Baby" ){
-      print("YA");
+//      print("YA");
       parent.GetComponent<Room>().BabyHit(c);
     }
   }

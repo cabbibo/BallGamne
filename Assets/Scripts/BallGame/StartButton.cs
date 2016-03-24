@@ -15,7 +15,12 @@ public class StartButton : MonoBehaviour {
 	
 	}
 
-  void OnTriggerEnter(){
-    BallGameObj.GetComponent<BallGame>().startGame( transform.gameObject );
+  void OnTriggerEnter(Collider c ){
+
+    print( c.gameObject.tag );
+    if( c.gameObject.tag != "Hand" && c.gameObject.tag != "Shield"  ){
+      BallGameObj.GetComponent<BallGame>().startGame( transform.gameObject );
+    }
+  
   }
 }

@@ -41,6 +41,7 @@ Shader "Custom/PlanetFloor" {
       uniform float3 _Hand1;
       uniform float3 _Hand2;
       uniform float3 _Size;
+      uniform float _Learning;
 
       
 
@@ -228,6 +229,9 @@ Shader "Custom/PlanetFloor" {
         //if(abs(.5 - i.uv.y) > .4){ col = float3( 1. , 1., 1.);}
      
         //col = float3( 1. , 1. , 1. );
+
+        float m = col.x * col.y * col.z + .3;// length( col );
+        col = lerp( col , float3( m  , m , m) , _Learning );
 
         fixed4 color;
         color = fixed4( col , 1. );

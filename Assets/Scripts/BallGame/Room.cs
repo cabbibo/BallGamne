@@ -464,7 +464,7 @@ public class Room : MonoBehaviour {
     collisionsThisFrame ++;
     if(collisionsThisFrame > 2 ){ return;}
 
-    print(activeCollision);
+//      print(activeCollision);
     CollisionInfo colInfo = collisions[activeCollision];
     
 

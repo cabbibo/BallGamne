@@ -112,7 +112,11 @@
 
 			  res = float2( sdBox( pos  , float3( .49 , .49 , .49 ) ) , 0.6 );
         float2 res2 = float2( sdBox( pos - float3( 0. , 0. , 1.5 / _Size.z) , float3( 1.0 , 4.0 , 1.0) / _Size ) , 1.0 );
-        res = sdfSubtract( res2 , res );
+        //res = sdfSubtract( res2 , res );
+
+        res.x += .01 * noise( pos * 40.0 + float3(0.,_Time.y*1.,0.0));
+        res.x += .04 * noise( pos * 20.0 + float3(0.,_Time.y*1.,0.0));
+        res.x += .08 * noise( pos * 5.0 + float3(0.,_Time.y*1.,0.0));
         //float3 modVal = float3( .3 , .3 , .3 );
         //int3 test;
         ////float2 res2 = float2( sdBox( modit(pos , modVal) - modVal / 2. , float3(.1 , 1. , .1 ) ) , 0.6 );
