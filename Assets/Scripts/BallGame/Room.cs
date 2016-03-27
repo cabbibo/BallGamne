@@ -136,19 +136,19 @@ public class Room : MonoBehaviour {
 
     roomAudio = transform.gameObject.GetComponent<RoomAudio>();
 
-    print(quadsPerRibbon);
-    print("maxVertCount");
-    print(maxVertCount);
-    print("usedVertCount");
-    print(usedVertCount);
-    print("unusedVertsCount");
-    print(unusedVertCount);
-
-    print("ribbonLength");
-    print(ribbonLength);
-
-    print("numVertsTotal");
-    print(numVertsTotal);
+    //print(quadsPerRibbon);
+    //print("maxVertCount");
+    //print(maxVertCount);
+    //print("usedVertCount");
+    //print(usedVertCount);
+    //print("unusedVertsCount");
+    //print(unusedVertCount);
+//
+    //print("ribbonLength");
+    //print(ribbonLength);
+//
+    //print("numVertsTotal");
+    //print(numVertsTotal);
       
     createBuffers();
     createMaterial();

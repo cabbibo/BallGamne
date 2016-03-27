@@ -11,8 +11,6 @@ public class HandScript : MonoBehaviour {
 
 
     ballGame = BallGameObj.GetComponent<BallGame>();
-    print("YO");
-    print( ballGame );
 
   
   }

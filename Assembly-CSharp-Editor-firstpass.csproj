@@ -74,6 +74,7 @@
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetRoom.shader" />
      <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF UI Metallic.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Instructions.shader" />
+     <None Include="Assets\Resources\Shaders\vertfrag\PlanetTip.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetMomma.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetBaby.shader" />
      <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Unlit.shader" />
@@ -97,6 +98,7 @@
      <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Deferred.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\RoomShader.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\getGridDiscard.cginc" />
+     <None Include="Assets\Resources\Shaders\vertfrag\PlanetHandle.shader" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>

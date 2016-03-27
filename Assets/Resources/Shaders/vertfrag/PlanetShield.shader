@@ -41,6 +41,7 @@
       uniform float3 _Hand2;
       uniform float3 _Size;
       uniform float4 _MommaInfo;
+      uniform float _Learning;
 
       //uniform sampler2D _NormalMap;
       //uniform sampler2D _TextureMap;
@@ -239,7 +240,8 @@
     		//if(abs(.5 - i.uv.y) > .4){ col = float3( 1. , 1., 1.);}
      
     		//col = float3( 1. , 1. , 1. );
-
+float m = col.x * col.y * col.z + .3;// length( col );
+        col = lerp( col , float3( m  , m , m) , _Learning );
         fixed4 color;
        // col = _Size;
         color = fixed4( col, 1. );

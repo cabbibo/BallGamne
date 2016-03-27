@@ -45,14 +45,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\HighScoreBall.cs" />
      <Compile Include="Assets\OSPNative\scenes\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
      <Compile Include="Assets\OSPNative\scripts\ONSPAudioSource.cs" />
+     <Compile Include="Assets\ResetGameData.cs" />
      <Compile Include="Assets\Scripts\BallGame\BallGame.cs" />
      <Compile Include="Assets\Scripts\BallGame\CollisionToParent.cs" />
+     <Compile Include="Assets\Scripts\BallGame\Game.cs" />
      <Compile Include="Assets\Scripts\BallGame\HandScript.cs" />
      <Compile Include="Assets\Scripts\BallGame\Momma.cs" />
      <Compile Include="Assets\Scripts\BallGame\Room.cs" />
      <Compile Include="Assets\Scripts\BallGame\RoomAudio.cs" />
+     <Compile Include="Assets\Scripts\BallGame\SaveLoad.cs" />
      <Compile Include="Assets\Scripts\BallGame\Shield.cs" />
      <Compile Include="Assets\Scripts\BallGame\StartButton.cs" />
      <Compile Include="Assets\Scripts\VRScripts\EventManager.cs" />
@@ -63,6 +67,7 @@
      <Compile Include="Assets\Scripts\VRScripts\TurnOffHat.cs" />
      <Compile Include="Assets\Scripts\VRScripts\controllerInfo.cs" />
      <Compile Include="Assets\Scripts\VRScripts\copyPosition.cs" />
+     <Compile Include="Assets\SetMaterialFake.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_LaserPointer.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_Teleporter.cs" />
@@ -91,6 +96,7 @@
      <Compile Include="Assets\SteamVR\Scripts\SteamVR_TestController.cs" />
      <Compile Include="Assets\SteamVR\Scripts\SteamVR_TrackedObject.cs" />
      <Compile Include="Assets\SteamVR\Scripts\SteamVR_Utils.cs" />
+     <Compile Include="Assets\tutorialButton.cs" />
      <None Include="Assets\Resources\Shaders\vertfrag\BasicShader.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\semLookup.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetFloor.shader" />
@@ -118,6 +124,7 @@
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetRoom.shader" />
      <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF UI Metallic.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Instructions.shader" />
+     <None Include="Assets\Resources\Shaders\vertfrag\PlanetTip.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetMomma.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\PlanetBaby.shader" />
      <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Unlit.shader" />
@@ -141,6 +148,7 @@
      <None Include="Assets\Plugins\Catlike Coding\SDF Toolkit\Shaders\SDF Deferred.cginc" />
      <None Include="Assets\Resources\Shaders\vertfrag\RoomShader.shader" />
      <None Include="Assets\Resources\Shaders\vertfrag\Chunks\getGridDiscard.cginc" />
+     <None Include="Assets\Resources\Shaders\vertfrag\PlanetHandle.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

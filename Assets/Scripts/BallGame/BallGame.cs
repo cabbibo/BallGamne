@@ -2,11 +2,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class BallGame : MonoBehaviour {
 
   public List<GameObject> Babies = new List<GameObject>();
   public GameObject BabyPrefab;
   public GameObject MommaPrefab;
+  public GameObject HighScorePrefab;
   public GameObject   Momma;
   public GameObject StartButton;
   public GameObject StartButtonPrefab;
@@ -19,10 +21,12 @@ public class BallGame : MonoBehaviour {
   public GameObject Platform;
   public GameObject CameraRig;
   public GameObject Title;
-  public GameObject Instruction;
 
-  public Material InstructionMat;
-  public Material TitleMat;
+  public GameObject tutButton;
+  public GameObject tutorialButtonPrefab;
+
+  public GameObject TitlePrefab;
+
   public Material PlatformMat;
   public AudioClip blarpClip;
   public AudioClip restartClip;
@@ -52,7 +56,14 @@ public class BallGame : MonoBehaviour {
   private Vector4 MommaInfo;
 
   public AudioClip[] AudioList;
+  public AudioClip[] HighScoreAudioList;
+  public AudioClip[] MommaHitAudioList;
   public List<AudioSource> AudioSources = new List<AudioSource>();
+
+  private AudioSource MommaHitSound;
+
+
+  private GameObject[] highScoreBalls;
 
 
   private bool tutorialFinished;
@@ -64,13 +75,12 @@ public class BallGame : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-    tutorialFinished = false;
-    triggerPulled = false;
-    shieldTriggerPulled = false;
-    readyToPlay = false;
-    notDeadVal = 0;
+    SaveLoad.Load();
 
-    triggerDown = false;
+
+    if( Game.current == null){
+      Game.current = new Game();
+    }
 
 
 
@@ -98,56 +108,36 @@ public class BallGame : MonoBehaviour {
     Platform.GetComponent<MeshRenderer>().material = m ;
     //m = PlatformMat;
     Platform.GetComponent<MeshRenderer>().material.SetVector("_Size" , Platform.transform.localScale ); 
-    Platform.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 1 );
+    Platform.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 0 );
 
-
-    Title = GameObject.CreatePrimitive(PrimitiveType.Cube);
-    Title.transform.localScale = new Vector3( 2.0f ,1.0f ,  .1f);
-    Title.transform.position = new Vector3( 0f , 1.5f , -3f );
-
-    m = TitleMat; //new Material( TitleShader );
-
-    Title.GetComponent<MeshRenderer>().material = m ;
+    Vector3 tPos =  new Vector3( 0f , 1.5f , -3f );
+    Title = (GameObject) Instantiate( TitlePrefab, tPos , new Quaternion());
+    Title.transform.localEulerAngles = new Vector3(0,180,0);
     //m = TitleMat;
     Title.GetComponent<MeshRenderer>().material.SetVector("_Scale" , Title.transform.localScale );
-
-
-
-    Instruction = GameObject.CreatePrimitive(PrimitiveType.Cube);
-    Instruction.transform.localScale = new Vector3( .5f ,2.0f , 2.0f);
-    Instruction.transform.position = new Vector3( 2f , 1.5f , 0 );
-
-    m = InstructionMat; //new Material( InstructionShader );
-
-    Instruction.GetComponent<MeshRenderer>().material = m ;
-    //m = InstructionMat;
-    Instruction.GetComponent<MeshRenderer>().material.SetVector("_Scale" , Instruction.transform.localScale );
-
-
-    Instruction.GetComponent<MeshRenderer>().enabled = false;
-    Instruction.GetComponent<BoxCollider>().enabled = false;
-
-    tutShield = Shield.transform.Find("tutShield").gameObject;
-
-    tutTrigger = Hand.transform.Find("tutTrigger").gameObject;
-    tutPartial = Hand.transform.Find("tutPartial").gameObject;
-    tutHit1 = Hand.transform.Find("tutHit1").gameObject;
-    tutHit2 = Hand.transform.Find("tutHit2").gameObject;
-    tutHit3 = Hand.transform.Find("tutHit3").gameObject;
-    tutStart = Hand.transform.Find("tutStart").gameObject;
-
-    tutHit1.GetComponent<MeshRenderer>().enabled = false;
-    tutHit2.GetComponent<MeshRenderer>().enabled = false;
-    tutHit3.GetComponent<MeshRenderer>().enabled = false;
-    tutPartial.GetComponent<MeshRenderer>().enabled = false;
-    tutStart.GetComponent<MeshRenderer>().enabled = false;
 
 
     AudioList =  new AudioClip[]{ (AudioClip)Resources.Load("Audio/hydra/TipHit1"),
                                 (AudioClip)Resources.Load("Audio/hydra/TipHit2"),
                                 (AudioClip)Resources.Load("Audio/hydra/TipHit3"),
                                 (AudioClip)Resources.Load("Audio/hydra/TipHit4"), };
-     
+
+    HighScoreAudioList = new AudioClip[]{  (AudioClip)Resources.Load("Audio/hydra/BaseHit"),
+                                      //(AudioClip)Resources.Load("Audio/hydra/ArmStroke2"),
+                                      //(AudioClip)Resources.Load("Audio/hydra/ArmStroke3"), 
+                                      };
+
+    MommaHitAudioList = new AudioClip[]{  (AudioClip)Resources.Load("Audio/hydra/ArmStroke1"),
+                                          (AudioClip)Resources.Load("Audio/hydra/ArmStroke2"),
+                                          (AudioClip)Resources.Load("Audio/hydra/ArmStroke3"), 
+    };
+
+
+    
+
+    MommaHitSound = gameObject.AddComponent<AudioSource>();
+
+
     for( var i = 0; i < AudioList.Length; i ++ ){
       print(AudioList[i]);
 
@@ -160,6 +150,24 @@ public class BallGame : MonoBehaviour {
 
 
 
+    highScoreBalls = new GameObject[10];
+    for( int i = 0; i < 10; i++){
+
+
+      float rad = Random.Range( 4 , 10 );
+      Vector3 p =  Random.onUnitSphere * rad;
+
+
+      highScoreBalls[i] = (GameObject) Instantiate( HighScorePrefab, p , new Quaternion());
+      highScoreBalls[i].transform.localScale = new Vector3( rad/4 , rad / 4 , rad /4);
+
+      int rand = Random.Range( 0 , 1 );
+      highScoreBalls[i].GetComponent<AudioSource>().clip = HighScoreAudioList[ rand ];
+      highScoreBalls[i].GetComponent<AudioSource>().pitch = .5f;
+
+    }
+
+    setHighScoreBalls( Game.current.highScore );
 
     Momma = (GameObject) Instantiate( MommaPrefab, new Vector3() , new Quaternion());
     Momma.GetComponent<Momma>().BallGameObj = transform.gameObject;
@@ -169,7 +177,7 @@ public class BallGame : MonoBehaviour {
     StartButton.GetComponent<StartButton>().BallGameObj = transform.gameObject;
     StartButton.transform.position = new Vector3(0 , 1  , -Platform.transform.localScale.z * .55f );
 
-    StartButton.SetActive( false );
+    
 
 
     //HandL.GetComponent<HandScript>().BallGameObj = transform.gameObject;
@@ -189,9 +197,17 @@ public class BallGame : MonoBehaviour {
     //LearningBlarp.GetComponent<Collider>().enabled = false;
     LearningBlarp.transform.localScale = LearningBlarp.transform.localScale * (2.0f - (score/30));
     LearningBlarp.GetComponent<MeshRenderer>().material.SetFloat("_Score" , (float)score );
-    LearningBlarp.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 1 );
+    LearningBlarp.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 0 );
     LearningBlarp.GetComponent<TrailRenderer>().enabled = false;
 
+
+    setTutorialObjects();
+
+    if( tutorialFinished == false ){ 
+      startTutorial(); 
+    }else{
+      addTutorialButton();
+    }
 
     restart( transform.gameObject );
 
@@ -201,13 +217,126 @@ public class BallGame : MonoBehaviour {
 
 	}
 
+  void setHighScoreBalls( float theScore ){
+
+    float base100 = Mathf.Floor( theScore / 100 );
+    float base10  = Mathf.Floor( (theScore - ( base100 * 100 )) / 10 );
+    float base1   = theScore - (base10 * 10);
+    //print( base1 );
+
+    for( var i = 0; i < 10; i++ ){
+      highScoreBalls[i].GetComponent<MeshRenderer>().material.SetInt( "_Digit1" , (int)base1 );
+      highScoreBalls[i].GetComponent<MeshRenderer>().material.SetInt( "_Digit2" , (int)base10 );
+    }
+
+  }
+
+  void removeHighScoreBalls(){
+
+    for( var i = 0; i < 10; i++ ){
+      highScoreBalls[i].GetComponent<MeshRenderer>().enabled = false;
+      highScoreBalls[i].GetComponent<Collider>().enabled = false;
+    }
+
+
+  }
+
+  void addHighScoreBalls(){
+
+    for( var i = 0; i < 10; i++ ){
+      highScoreBalls[i].GetComponent<MeshRenderer>().enabled = true;
+      highScoreBalls[i].GetComponent<Collider>().enabled = true;
+    }
+
+
+  }
+
+  void addTutorialButton(){
+     // tutButton.GetComponent<MeshRenderer>().enabled = false;
+     // tutButton.GetComponent<Collider>().enabled = false;
+      tutButton.SetActive( true );
+  }
+
+  void removeTutorialButton(){
+      //tutButton.GetComponent<MeshRenderer>().enabled = true;;
+      //tutButton.GetComponent<Collider>().enabled = true;
+
+      tutButton.SetActive( false );
+  }
+
+  void setTutorialObjects(){
+
+    tutButton  = (GameObject) Instantiate( tutorialButtonPrefab, new Vector3(Platform.transform.localScale.x*.5f,2,Platform.transform.localScale.z*.5f) , new Quaternion()); 
+    tutButton.GetComponent<tutorialButton>().ballGame = this;
+    removeTutorialButton();
+
+    tutorialFinished = Game.current.finishedTutorial;
+    triggerPulled = false;
+    shieldTriggerPulled = false;
+    readyToPlay = false;
+    notDeadVal = -5;
+
+    triggerDown = false;
+
+
+    tutShield = Shield.transform.Find("tutShield").gameObject;
+
+    tutTrigger = Hand.transform.Find("tutTrigger").gameObject;
+    tutPartial = Hand.transform.Find("tutPartial").gameObject;
+    tutHit1 = Hand.transform.Find("tutHit1").gameObject;
+    tutHit2 = Hand.transform.Find("tutHit2").gameObject;
+    tutHit3 = Hand.transform.Find("tutHit3").gameObject;
+    tutStart = Hand.transform.Find("tutStart").gameObject;
+
+    tutShield.GetComponent<MeshRenderer>().enabled = false;
+    tutTrigger.GetComponent<MeshRenderer>().enabled = false;
+    tutHit1.GetComponent<MeshRenderer>().enabled = false;
+    tutHit2.GetComponent<MeshRenderer>().enabled = false;
+    tutHit3.GetComponent<MeshRenderer>().enabled = false;
+    tutPartial.GetComponent<MeshRenderer>().enabled = false;
+    tutStart.GetComponent<MeshRenderer>().enabled = false;
+
+  }
+
+  public void startTutorial(){
+
+    removeHighScoreBalls();
+
+    removeTutorialButton();
+
+       Title.GetComponent<MeshRenderer>().enabled = false;
+      //Title.GetComponent<BoxCollider>().enabled = false;
+
+
+    MommaHitSound.clip = MommaHitAudioList[ Random.Range( 0 , MommaHitAudioList.Length)];
+    MommaHitSound.Play();
+
+    Game.current.finishedTutorial = false;
+    tutorialFinished = false;
+    triggerPulled = false;
+    shieldTriggerPulled = false;
+    readyToPlay = false;
+    notDeadVal = -5;
+
+    LearningBlarp.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 1 );
+    Platform.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 1 );
+    Title.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 1 );
+    //Shield.transform.Find("Shield").GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 1 );
+    
+    StartButton.SetActive( false );
+
+    tutTrigger.GetComponent<MeshRenderer>().enabled = true;
+    tutShield.GetComponent<MeshRenderer>().enabled = true;
+ 
+
+  }
+
   void tutorialHandHit(){
 
     tutHit1.GetComponent<MeshRenderer>().enabled =  false ;
     tutHit2.GetComponent<MeshRenderer>().enabled =  false ;
     tutHit3.GetComponent<MeshRenderer>().enabled =  false ;
     tutPartial.GetComponent<MeshRenderer>().enabled =  false ;
-
 
 
     notDeadVal = 0.0f;
@@ -228,36 +357,60 @@ public class BallGame : MonoBehaviour {
 
   void finishTutorial(){
     tutStart.GetComponent<MeshRenderer>().enabled = false;
+    tutShield.GetComponent<MeshRenderer>().enabled =  false;;
+    LearningBlarp.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 0 );
+    Platform.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 0 );
+    Title.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 0 );
+    Shield.transform.Find("Shield").GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 0 );
+
     tutorialFinished = true;
+    Game.current.finishedTutorial = true;
+    SaveLoad.Save();
+    addHighScoreBalls();
+
+
+    MommaHitSound.clip = MommaHitAudioList[ Random.Range( 0 , MommaHitAudioList.Length)];
+    MommaHitSound.Play();
+
   }
 
   void getReadyToPlay(){
     
     readyToPlay = true;
 
-    tutHit1.GetComponent<MeshRenderer>().enabled =  false;;
-    tutHit2.GetComponent<MeshRenderer>().enabled =  false;;
-    tutHit3.GetComponent<MeshRenderer>().enabled =  false;;
-    tutPartial.GetComponent<MeshRenderer>().enabled =  false;;
+    tutHit1.GetComponent<MeshRenderer>().enabled =  false;
+    tutHit2.GetComponent<MeshRenderer>().enabled =  false;
+    tutHit3.GetComponent<MeshRenderer>().enabled =  false;
+    tutPartial.GetComponent<MeshRenderer>().enabled =  false;
 
     tutStart.GetComponent<MeshRenderer>().enabled =  true ;
 
-    StartButton.SetActive( true );
 
+    MommaHitSound.clip = MommaHitAudioList[ Random.Range( 0 , MommaHitAudioList.Length)];
+    MommaHitSound.Play();
+
+    StartButton.SetActive( true );
   }
 	
   void UpdateTutorial(){
 
+    tutButton.transform.LookAt( new Vector3( 0 , 2 , 0 ) );
     if( tutorialFinished == false ){
       if( triggerPulled == false && Controller.GetComponent<controllerInfo>().triggerVal > 0.8 ){
         triggerPulled = true;
         notDeadVal = 0.0f;
-        tutTrigger.GetComponent<MeshRenderer>().enabled =  false;;
+
+        MommaHitSound.clip = MommaHitAudioList[ Random.Range( 0 , MommaHitAudioList.Length)];
+        MommaHitSound.Play();
+        tutTrigger.GetComponent<MeshRenderer>().enabled =  false;
       } 
 
       if( shieldTriggerPulled == false && ShieldController.GetComponent<controllerInfo>().triggerVal > 0.8 ){
         shieldTriggerPulled = true;
         notDeadVal = 0.0f;
+
+        MommaHitSound.clip = MommaHitAudioList[ Random.Range( 0 , MommaHitAudioList.Length)];
+        MommaHitSound.Play();
         tutShield.GetComponent<MeshRenderer>().enabled =  false;;
       } 
     }
@@ -275,6 +428,7 @@ public class BallGame : MonoBehaviour {
 	void Update () {
 
     UpdateTutorial();
+
     float base100 = Mathf.Floor( score / 100 );
     float base10  = Mathf.Floor( (score - ( base100 * 100 )) / 10 );
     float base1   = score - (base10 * 10);
@@ -393,8 +547,15 @@ public class BallGame : MonoBehaviour {
     resizeRoom();
     moveMomma();
 
+    MommaHitSound.clip = MommaHitAudioList[ Random.Range( 0 , MommaHitAudioList.Length)];
+    MommaHitSound.Play();
+
 
     score ++;
+    Game.current.lastScore = score;
+
+    if( score > Game.current.highScore ){ Game.current.highScore = score; }
+
     ScoreText.GetComponent<TextMesh>().text = score.ToString();
     
 
@@ -508,6 +669,7 @@ public class BallGame : MonoBehaviour {
 
   void restart(GameObject handHit ){
      
+      SaveLoad.Save();
 
       foreach( GameObject baby in Babies ){
 
@@ -521,21 +683,21 @@ public class BallGame : MonoBehaviour {
       score = 0;
       blarpSound.Play();
 
+      setHighScoreBalls( Game.current.highScore );
+     
+
       LearningBlarp.SetActive(true); 
       LearningBlarp.transform.position = new Vector3( 0 , 1 , 2);//transform.position = new Vector3( 0 , 1 , -2);
       LearningBlarp.GetComponent<Rigidbody>().velocity = new Vector3( 0 , 0, 0);
 //      LearningBlarp.GetComponent<MeshRenderer>().enabled = true;
 
-      
-      Platform.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 1 );
+      if( tutorialFinished == true ){ addTutorialButton(); addHighScoreBalls();  
+      Title.GetComponent<MeshRenderer>().enabled = true;};
+//      Title.GetComponent<BoxCollider>().enabled = false;};
 
       StartButton.GetComponent<MeshRenderer>().enabled = true;
       StartButton.GetComponent<BoxCollider>().enabled = true;
-      Title.GetComponent<MeshRenderer>().enabled = true;
-      Title.GetComponent<BoxCollider>().enabled = false;
-
-     // Instruction.GetComponent<MeshRenderer>().enabled = true;
-     // Instruction.GetComponent<BoxCollider>().enabled = true;
+     
 
       Momma.GetComponent<MeshRenderer>().enabled = true;
       Momma.GetComponent<Collider>().enabled = false;
@@ -551,11 +713,19 @@ public class BallGame : MonoBehaviour {
 
     finishTutorial();
     restartSound.Play();
+    removeHighScoreBalls();
+
   
     resizeRoom();
     Room.GetComponent<Room>().active = true;
 
-    Platform.GetComponent<MeshRenderer>().material.SetFloat("_Learning" , 0);
+    removeTutorialButton();
+
+
+    MommaHitSound.clip = MommaHitAudioList[ Random.Range( 0 , MommaHitAudioList.Length)];
+    MommaHitSound.Play();
+
+   
 
     
     //LearningBlarp.GetComponent<MeshRenderer>().enabled = false;
@@ -568,10 +738,8 @@ public class BallGame : MonoBehaviour {
     Momma.GetComponent<MeshRenderer>().enabled = true;
 
     Title.GetComponent<MeshRenderer>().enabled = false;
-    Title.GetComponent<BoxCollider>().enabled = false;
+    //Title.GetComponent<BoxCollider>().enabled = false;
 
-    //Instruction.GetComponent<MeshRenderer>().enabled = false;
-    //Instruction.GetComponent<BoxCollider>().enabled = false;
 
     float size = getSizeFromScore();
     empty.transform.position = new Vector3( Random.Range(  -size/4 , size/4 ), 

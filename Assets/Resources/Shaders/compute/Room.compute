@@ -98,6 +98,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
   }
 
   if( length( force) > 5 ){ force = normalize( force ) * 5; }
+//  if( length( vert.vel) > 5 ){ vert.vel = normalize( vel ) * 5; }
 
  vert.vel += force * .1;
  vert.vel *= .9;
