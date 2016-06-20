@@ -1,0 +1,6 @@
+Copyright Isaac Cohen 2016
+
+You are free to use this code to help you learn about how VR / Shaders / weirdness works.
+If you plan on using the code to create something for profit, please let me know, and we can work something out!
+
+Also please feel free to ask any questions you want!
